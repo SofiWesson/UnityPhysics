@@ -1,5 +1,5 @@
 sceneSetups:
-- path: Assets/_Scenes/02 CharacterController.unity
+- path: Assets/_Scenes/04 Terrain.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
