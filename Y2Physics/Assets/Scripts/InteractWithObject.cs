@@ -6,6 +6,7 @@ public class InteractWithObject : MonoBehaviour
 {
     Raycaster ray = null;
     GameObject objHit;
+    Rigidbody rb;
 
     private Vector3 mOffset;
     private float mZCoord;
@@ -14,15 +15,6 @@ public class InteractWithObject : MonoBehaviour
     void Start()
     {
         ray = GetComponent<Raycaster>();
-        objHit  = ray.GetHit().transform.gameObject;
-    }
-    
-    private void OnMouseDown()
-    {
-        mZCoord = Camera.main.WorldToScreenPoint(objHit.transform.position).z;
-
-        // Store offset
-        mOffset = objHit.transform.position - GetMouseWorldPos();
     }
 
     private Vector3 GetMouseWorldPos()
@@ -39,7 +31,40 @@ public class InteractWithObject : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            objHit.transform.position = GetMouseWorldPos() + mOffset;
+            objHit = ray.GetObjectHit();
+
+            if (objHit.GetComponent<Rigidbody>() != null)
+            {
+                rb = objHit.GetComponent<Rigidbody>();
+
+                rb.isKinematic = true;
+
+                mZCoord = Camera.main.WorldToScreenPoint(objHit.transform.position).z;
+
+                // Store offset
+                mOffset = objHit.transform.position - GetMouseWorldPos();
+            }
+        }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            objHit = ray.GetObjectHit();
+            objHit.SetActive(false);
+            Destroy(objHit);
+            objHit = null;
+        }
+
+        if (rb != null)
+        {
+            if (Input.GetMouseButton(0))
+            {
+                objHit.transform.position = GetMouseWorldPos() + mOffset;
+            }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                rb.isKinematic = false;
+            }
         }
     }
 }

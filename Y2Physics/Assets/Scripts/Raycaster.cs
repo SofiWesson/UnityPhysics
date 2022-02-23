@@ -10,6 +10,7 @@ public class Raycaster : MonoBehaviour
     RaycastHit hit;
 
     public RaycastHit GetHit() { return hit; }
+    public GameObject GetObjectHit() { return hit.transform.gameObject; }
 
     void Update()
     {
