@@ -12,6 +12,8 @@ public class CameraController : MonoBehaviour
     float currentDistance = 6f;
     float distanceBack = 6f;
 
+    float heightOffset = 1.5f;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,7 +41,7 @@ public class CameraController : MonoBehaviour
         distanceBack = Mathf.Clamp(distanceBack - Input.GetAxis("Mouse ScrollWheel") * zoomSpeed, 2, 10);
 
         RaycastHit hit;
-        if (Physics.Raycast(target.position, -transform.forward, out hit, distance))
+        if (Physics.Raycast(GetTargetPosition(), -transform.forward, out hit, distance))
         {
             // snap the camera right into where the collision happened
             currentDistance = hit.distance;
@@ -47,10 +49,15 @@ public class CameraController : MonoBehaviour
         else
         {
             // relax th camera back to the desired distance
-            currentDistance = Mathf.MoveTowards(currentDistance, distance, Time.deltaTime);
+            currentDistance = Mathf.MoveTowards(currentDistance, distance + distanceBack, Time.deltaTime);
         }
 
         // look at the target position
-        transform.position = target.position - currentDistance * transform.forward;
+        transform.position = GetTargetPosition() - currentDistance * transform.forward;
+    }
+
+    Vector3 GetTargetPosition()
+    {
+        return target.position + heightOffset * Vector3.up;
     }
 }
